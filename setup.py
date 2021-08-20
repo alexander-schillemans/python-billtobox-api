@@ -21,6 +21,7 @@ setup(
   keywords = ['bill-to-box', 'api', 'banqup', 'unifiedpost'],
   install_requires=[
           'requests',
+          'oauthlib',
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',

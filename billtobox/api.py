@@ -53,6 +53,8 @@ class BillToBoxAPI:
 
             return accessToken
 
+    def authorize()
+
     def doRequest(self, method, url, data=None, headers=None):
 
         if headers:

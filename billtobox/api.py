@@ -5,6 +5,7 @@ import time
 
 from . import config
 from .cachehandler import CacheHandler
+from .authhandler import AuthHandler
 
 class BillToBoxAPI:
 
@@ -20,40 +21,7 @@ class BillToBoxAPI:
 
         self.baseUrl = config.DEMO_URL if demo else config.BASE_URL
         self.cacheHandler = CacheHandler()
-    
-    def setTokenHeader(self, token):
-        bearerStr = 'Bearer {token}'.format(token=token)
-        self.headers.update({'Authorization' : bearerStr})
-
-    def checkHeaderTokens(self):
-
-        # If no authorization header is found, we need to include the token
-        if 'Authorization' not in self.headers:
-            
-            # Check if we have a token stored in cache, if not, acquire one
-            # If we do, set it in the header
-            cachedAccessToken = self.cacheHandler.getCache(self.clientId)
-            if cachedAccessToken is None:
-                self.acquireAccessToken()
-            else:
-                self.setTokenHeader(cachedAccessToken)
-
-    def acquireAccessToken(self):
-
-        data = { 'grant_type' : 'client_credentials' }
-        req = requests.post(config.ACCESS_TOKEN_URL, data=data, allow_redirects=False, auth=(self.clientId, self.clientSecret))
-
-        status = req.status_code
-        response = req.json()
-
-        if status == 200:
-            accessToken = response['access_token']
-            self.cacheHandler.setCache(self.clientId, accessToken)
-            self.setTokenHeader(accessToken)
-
-            return accessToken
-
-    def authorize()
+        self.authHandler = AuthHandler(self, self.clientId, self.clientSecret)
 
     def doRequest(self, method, url, data=None, headers=None):
 
@@ -76,7 +44,7 @@ class BillToBoxAPI:
 
     def request(self, method, url, data=None, headers=None):
 
-        self.checkHeaderTokens()
+        self.authHandler.checkHeaderTokens()
         response = self.doRequest(method, url, data, headers)
 
         if 'json' in response.headers['Content-Type']:

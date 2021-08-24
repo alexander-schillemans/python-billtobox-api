@@ -26,10 +26,12 @@ class AuthHandler:
         authorizationUrl, self.state = oauth.authorization_url(self.authUrl)
         return authorizationUrl
     
-    def retrieveToken(self, response):
-        if not self.redirectUri: raise NotFoundError('redirect uri is not found. init the auth flow first.')
+    def retrieveToken(self, response, redirectUri=None):
+        if not redirectUri: 
+            if not self.redirectUri: raise NotFoundError('redirect uri is not found. init the auth flow first or give the uri as a parameter.')
+            redirectUri = self.redirectUri
 
-        oauth = OAuth2Session(self.clientId, state=self.state, redirect_uri=self.redirectUri)
+        oauth = OAuth2Session(self.clientId, state=self.state, redirect_uri=redirectUri)
         oauthToken = oauth.fetch_token(self.tokenUrl, client_secret=self.clientSecret, authorization_response=response)
         self.token = oauth._client.access_token
 

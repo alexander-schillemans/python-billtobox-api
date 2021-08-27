@@ -3,7 +3,7 @@ from .base import ObjectListModel, BaseModel, ListResult
 class PurchaseInvoiceList(ListResult):
 
     def __init__(self):
-        super(PurchaseInvoiceList, self).__init__(listObject=PurchaseInvoice)
+        super().__init__(listObject=PurchaseInvoice)
 
 class PurchaseInvoice(BaseModel):
 
@@ -46,7 +46,7 @@ class PurchaseInvoice(BaseModel):
 class InvoiceLineList(ObjectListModel):
 
     def __init__(self):
-        super(InvoiceLineList, self).__init__(list=[], listObject=InvoiceLine)
+        super().__init__(list=[], listObject=InvoiceLine)
 
 
 class InvoiceLine(BaseModel):
@@ -59,6 +59,8 @@ class InvoiceLine(BaseModel):
         service_price=None,
         service_vat=None
     ):
+
+        super().__init__()
 
         self.id = id
         self.service_name = service_name

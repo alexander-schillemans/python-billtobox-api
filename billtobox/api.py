@@ -27,7 +27,7 @@ class BillToBoxAPI:
 
         self.purchaseInvoices = PurchaseInvoiceMethods(self)
 
-    def doRequest(self, method, url, data=None, headers=None):
+    def doRequest(self, method, url, data=None, headers=None, files=None):
 
         if headers:
             mergedHeaders = self.headers
@@ -40,16 +40,19 @@ class BillToBoxAPI:
         if method == 'GET':
             response = requests.get(reqUrl, params=data, headers=headers)
         elif method == 'POST':
-            response = requests.post(reqUrl, data=json.dumps(data), headers=headers)
+            if files: response = requests.post(reqUrl, data=json.dumps(data), files=files, headers=headers)
+            else: response = requests.post(reqUrl, data=json.dumps(data), headers=headers)
         elif method == 'PUT':
             response = requests.put(reqUrl, data=json.dumps(data), headers=headers)
-        
+        elif method == 'DELETE':
+            response = requests.delete(reqUrl, params=json.dumps(data), headers=headers)
+
         return response
 
-    def request(self, method, url, data=None, headers=None):
+    def request(self, method, url, data=None, headers=None, files=None):
 
         self.authHandler.checkHeaderTokens()
-        response = self.doRequest(method, url, data, headers)
+        response = self.doRequest(method, url, data, headers, files)
 
         if 'json' in response.headers['Content-Type']:
             respContent = response.json()
@@ -62,10 +65,14 @@ class BillToBoxAPI:
         status, headers, response = self.request('GET', url, data, headers)
         return status, headers, response
     
-    def post(self, url, data=None, headers=None):
-        status, headers, response = self.request('POST', url, data, headers)
+    def post(self, url, data=None, headers=None, files=None):
+        status, headers, response = self.request('POST', url, data, headers, files)
         return status, headers, response
     
     def put(self, url, data=None, headers=None):
         status, headers, response = self.request('PUT', url, data, headers)
+        return status, headers, response
+    
+    def delete(self, url, data=None, headers=None):
+        status, headers, response = self.request('DELETE', url, data, headers)
         return status, headers, response

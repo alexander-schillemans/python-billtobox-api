@@ -14,7 +14,25 @@ class PurchaseInvoiceMethods(APIEndpoint):
         
         url = self.endpoint
         status, headers, respJson = self.api.get(url, data)
-        
+
         if status != 200: return PurchaseInvoice().parseError(respJson)
 
         return PurchaseInvoiceList().parse(respJson)
+    
+    def get(self, id):
+        url = '{0}/{1}'.format(self.endpoint, id)
+        data = None
+        status, headers, respJson = self.api.get(url, data)
+
+        if status != 200: return PurchaseInvoice().parseError(respJson)
+
+        return PurchaseInvoice().parse(respJson)
+    
+    def delete(self, id):
+        url = '{0}/{1}'.format(self.endpoint, id)
+        data = None
+        status, headers, respJson = self.api.delete(url, data)
+
+        if status != 200: return PurchaseInvoice().parseError(respJson)
+
+        return PurchaseInvoice().parse(respJson)

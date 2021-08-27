@@ -1,6 +1,7 @@
 
 #==============[HELPER FUNCTIONS]=================#
 
+
 def getIndexWithValue(list, attribute, value):
 
     for index, obj in enumerate(list):
@@ -26,6 +27,11 @@ def formatKey(string):
 #==============[BASE MODELS]=================#
 
 class BaseModel:
+    
+    def __init__(self):
+
+        self.hasError = False
+        self.error = None
 
     def parse(self, json):
         for key, value in json.items():
@@ -56,10 +62,20 @@ class BaseModel:
                     dikt[k] = v
 
         return dikt if len(dikt) > 0 else None
+    
+    def parseError(self, json):
+
+        from .errors import Error
+        
+        self.hasError = True
+        self.error = Error().parse(json)
+
+        return self
 
 class ObjectListModel(BaseModel):
 
     def __init__(self, list=[], listObject=None):
+        super().__init__()
 
         self.list = list
         self.listObject = listObject
@@ -102,3 +118,37 @@ class ObjectListModel(BaseModel):
 
     def items(self):
         return self.list
+
+class ListResult(BaseModel):
+
+    def __init__(self,
+        size=None,
+        total=None,
+        page=None,
+        listObject=None
+    ):
+        super().__init__()
+
+        self.size = size
+        self.total = total
+        self.page = page
+        self.listObject = listObject
+
+    def parse(self, json):
+        super().parse(json)
+        
+        self.results = []
+
+        if 'results' in json:
+            if isinstance(json['results'], dict):
+                itemObj = self.listObject().parse(json)
+                self.results.append(itemObj)
+            elif isinstance(json['results'], list):
+                for item in json['results']:
+                        itemObj = self.listObject().parse(item)
+                        self.results.append(itemObj)
+        
+        return self
+    
+    def items(self):
+        return self.results

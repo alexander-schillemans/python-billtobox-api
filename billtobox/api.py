@@ -7,6 +7,8 @@ from . import config
 from .cachehandler import CacheHandler
 from .authhandler import AuthHandler
 
+from .endpoints.purchaseinvoices import PurchaseInvoiceMethods
+
 class BillToBoxAPI:
 
     def __init__(self, clientId, clientSecret, demo=False):
@@ -22,6 +24,8 @@ class BillToBoxAPI:
         self.baseUrl = config.DEMO_URL if demo else config.BASE_URL
         self.cacheHandler = CacheHandler()
         self.authHandler = AuthHandler(self, self.clientId, self.clientSecret)
+
+        self.purchaseInvoices = PurchaseInvoiceMethods(self)
 
     def doRequest(self, method, url, data=None, headers=None):
 

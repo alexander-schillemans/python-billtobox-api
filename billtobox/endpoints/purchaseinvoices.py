@@ -28,7 +28,32 @@ class PurchaseInvoiceMethods(APIEndpoint):
 
         return PurchaseInvoice().parse(respJson)
 
-    
+    def getByUUID(self, uuid):
+        page = 0
+        size = 50
+        data = { 'page' : page, 'size' : size }
+        invoiceFound = False
+        url = self.endpoint
+
+        status, headers, respJson = self.api.get(url, data)
+        if status != 200: return PurchaseInvoice().parseError(respJson)
+
+        pList = PurchaseInvoiceList().parse(respJson)
+        while(len(pList.items()) > 1):
+            for invoice in pList.items():
+                print('checking invoice uuid: ', invoice.purchase_invoice_uuid)
+                if invoice.purchase_invoice_uuid == uuid: 
+                    return invoice
+            
+            data['page'] += 1
+            status, headers, respJson = self.api.get(url, data)
+
+            if status != 200: return PurchaseInvoice().parseError(respJson)
+
+            pList = PurchaseInvoiceList().parse(respJson)
+        
+        return None
+
     def delete(self, id):
         url = '{0}/{1}'.format(self.endpoint, id)
         data = None

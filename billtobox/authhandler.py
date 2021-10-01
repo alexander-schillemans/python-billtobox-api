@@ -12,8 +12,8 @@ class AuthHandler:
         self.api = api
         self.cacheHandler = api.cacheHandler
 
-        self.authUrl = config.DEMO_AUTH_URL if api.demo else config.AUTH_URL
-        self.tokenUrl = config.DEMO_ACCESS_TOKEN_URL if api.demo else config.ACCESS_TOKEN_URL
+        self.authUrl = config.UAT_AUTH_URL if api.demo else config.AUTH_URL
+        self.tokenUrl = config.UAT_ACCESS_TOKEN_URL if api.demo else config.ACCESS_TOKEN_URL
         self.redirectUri = None
 
         self.state = None

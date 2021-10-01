@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
   name = 'python-billtobox-api',         
   packages=['billtobox', 'billtobox.models', 'billtobox.constants', 'billtobox.cache', 'billtobox.endpoints'],
-  version = '0.1.3',
+  version = '0.1.0',
   license='GPL-3.0-or-later',
   description = 'Wrapper for the Bill-To-Box / BanqUP (UnifiedPost) API - v4',
   long_description=long_description,
@@ -17,7 +17,7 @@ setup(
   author = 'Alexander Schillemans',
   author_email = 'alexander.schillemans@lhs.global',
   url = 'https://github.com/alexanderlhsglobal/python-billtobox-api',
-  download_url = 'https://github.com/alexanderlhsglobal/python-billtobox-api/archive/refs/tags/0.1.1.tar.gz',
+  download_url = 'https://github.com/alexanderlhsglobal/python-billtobox-api/archive/refs/tags/0.1.0.tar.gz',
   keywords = ['bill-to-box', 'api', 'banqup', 'unifiedpost'],
   install_requires=[
           'requests',
